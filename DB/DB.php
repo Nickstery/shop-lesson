@@ -8,6 +8,8 @@
  */
 class DB
 {
+
+    //test
     private static $db;
 
     private function __construct(){}
