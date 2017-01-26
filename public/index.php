@@ -1,33 +1,5 @@
 <?php
 
-require_once('../controller/TestClass.php');
-
-
-$obj = new ReflectionMethod("TestClass", 'test');
-$obj->invokeArgs(new TestClass(),[1,2]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /** Include needed classes */
 require_once('../smarty/Smarty.class.php');
 require_once('../controller/MainController.php');
@@ -65,6 +37,7 @@ $action = (empty($route_pieces)) ? 'index' : array_shift($route_pieces);
  * Checks if requested route for existence
  */
 if(!method_exists($controller, $route)) {
-    return $controller->not_found();
+    $controller->not_found();
+    return;
 }
 $controller->$route();

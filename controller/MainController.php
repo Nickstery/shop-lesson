@@ -79,6 +79,7 @@ class MainController
     public function not_found()
     {
         $this->showHTML();
+        return;
     }
 
     /**
