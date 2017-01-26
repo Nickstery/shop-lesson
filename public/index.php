@@ -1,71 +1,70 @@
 <?php
-session_start();
-require_once('../DB/DB.php');
-require_once('../functions/functions.php');
-require_once('../model/Authorizer.php');
 
-/*
+require_once('../controller/TestClass.php');
 
-$user[] = [
-    'action' => 'login',
-    'user_id' => 2,
-    'username' => "Viktor",
-    'time' => '11/11/2017 12:12:12'
-];
 
-$user[] = [
-    'action' => 'register',
-    'user_id' => 10,
-    'username' => "Alex",
-    'time' => '01/12/2016 22:10:02'
-];
-echo json_encode($user);
+$obj = new ReflectionMethod("TestClass", 'test');
+$obj->invokeArgs(new TestClass(),[1,2]);
 
-die();
-*/
-$action = empty($_GET['action']) ? 'login' : $_GET['action'];
 
-switch($action)
-{
-    case 'login':
-        if(!empty($_POST)) {
 
-            Authorizer::auth();
 
-            $name = $_POST['login'];
-            $pass = $_POST['pass'];
-            if (loginUser($name, $pass)){
-                header("Location: http://localhost?action=main");
-            }
-            die ('NULL');
-        } else {
-            echo getLoginForm();
-        }
-        break;
-    case 'register':
-        if(!empty($_POST)) {
-           $name = $_POST['login'];
-            $pass = $_POST['pass'];
-            if (registerUser($name, $pass)){
-                header("Location: http://localhost?action=login");
-            }
-            die('USER ALREADY EXISTS');
-        } else {
-            echo getRegisterForm();
-        }
-        break;
-    case 'logout':
-        logout();
-        exit;
-        break;
-    case 'main':
-        if(isset($_SESSION['auth'])){
-            die('success auth<br><a href="http://localhost?action=logout">LOGOUT</a>');
-        }
-        die('Access denied, please login');
-        break;
-    default:
-        die("action does not exists");
-        break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** Include needed classes */
+require_once('../smarty/Smarty.class.php');
+require_once('../controller/MainController.php');
+
+/** Global initialization of smarty template engine */
+$smarty = new Smarty();
+
+/** Sets the views folder (HTML pages location) */
+$smarty->setTemplateDir('../views');
+
+/**
+ * Gets the user's request parameters as string
+ * http://localhost/test/123 => test/123
+ */
+$request_uri = ltrim($_SERVER['REQUEST_URI'],"/");
+
+
+/** strip string to array http://localhost/{route}/{action} => array(route,action)*/
+$route_pieces = explode("/", $request_uri);
+
+
+/**
+ * Gets the route from the request http://localhost/{route}/{action} => route
+ */
+$route = (empty($route_pieces)) ? 'main' : array_shift($route_pieces);
+
+$controller = new MainController();
+
+/**
+ * Gets the action from the request http://localhost/{route}/{action} => action
+ */
+$action = (empty($route_pieces)) ? 'index' : array_shift($route_pieces);
+
+/**
+ * Checks if requested route for existence
+ */
+if(!method_exists($controller, $route)) {
+    return $controller->not_found();
 }
-
+$controller->$route();

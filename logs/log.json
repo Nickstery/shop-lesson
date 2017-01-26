@@ -1,2 +1,0 @@
-file_put_contents('log.json', 'User login: name = '.$name.'time: DD/MM/YYYY HH:MM:SS');
-file_put_contents('log.json', 'User register: name = '.$name.'time: DD/MM/YYYY HH:MM:SS');
